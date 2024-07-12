@@ -47,7 +47,7 @@ bool on_motion_notify_event(GdkEventMotion* event) override {
 }
 ```
 
-"Dengan begini, kita akan membuat gambar berdasarkan pergerakan mouse ketika mouse dalam keadaan diklik. Untuk fitur selanjutnya, saya persilahkan sauadara hemdi untuk membawakannya."
+"Dengan begini, kita akan membuat gambar berdasarkan pergerakan mouse ketika mouse dalam keadaan diklik. Untuk fitur selanjutnya, saya persilahkan sauadara Hemdi untuk membawakannya."
 
 ## [Segment 4: Fitur Clear] - Hemdi's voice
 
@@ -59,7 +59,8 @@ void clear() {
     queue_draw(); // Request a redraw of the widget
 }
 ```
-Hopla! kita berhasil menambahkan fitur clear dalam aplikasi paint. Untuk fitur selanjutanya, saya persilahkan saudara Rijal untuk membawakannya.
+
+"Hopla! kita berhasil menambahkan fitur clear dalam aplikasi paint. Untuk fitur selanjutanya, saya persilahkan saudara Rijal untuk membawakannya."
 
 ## [Segment 5: Fitur Select Color] - Rijal's voice
 
