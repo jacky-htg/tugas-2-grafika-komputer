@@ -77,6 +77,66 @@ void set_color(const Gdk::RGBA& color) {
 "Sekarang, mari kita lihat bagaimana aplikasi ini bekerja. Kita akan menambahkan semua komponen ke window, termasuk area gambar, tombol clear, dan tombol warna. Kemudian kita jalankan aplikasinya."
 
 ```
+#include <gtkmm.h>
+#include <vector>
+#include <iostream>
+
+class MyArea : public Gtk::DrawingArea {
+public:
+    MyArea() {
+        // Setup event handlers for drawing
+        add_events(Gdk::BUTTON_PRESS_MASK | Gdk::POINTER_MOTION_MASK);
+        current_color.set_rgba(0.0, 0.0, 0.0); // Default color is black
+    }
+
+    void set_color(const Gdk::RGBA& color) {
+        current_color = color;
+    }
+
+    void clear() {
+        lines.clear();
+        queue_draw(); // Request a redraw of the widget
+    }
+
+protected:
+    std::vector<std::vector<std::pair<Gdk::Point, Gdk::RGBA>>> lines;
+    std::vector<std::pair<Gdk::Point, Gdk::RGBA>> current_line;
+    Gdk::RGBA current_color;
+
+    bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override {
+        for (const auto& line : lines) {
+            if (line.size() > 1) {
+                cr->set_line_width(2.0);
+                cr->set_source_rgba(line[0].second.get_red(), line[0].second.get_green(), line[0].second.get_blue(), line[0].second.get_alpha());
+                cr->move_to(line[0].first.get_x(), line[0].first.get_y());
+                for (unsigned int i = 1; i < line.size(); ++i) {
+                    cr->line_to(line[i].first.get_x(), line[i].first.get_y());
+                }
+                cr->stroke();
+            }
+        }
+        return true;
+    }
+
+    bool on_button_press_event(GdkEventButton* event) override {
+        if (event->button == 1) {
+            current_line.clear();
+            current_line.push_back({Gdk::Point(event->x, event->y), current_color});
+            lines.push_back(current_line);
+        }
+        return true;
+    }
+
+    bool on_motion_notify_event(GdkEventMotion* event) override {
+        if (event->state & GDK_BUTTON1_MASK) {
+            lines.back().push_back({Gdk::Point(event->x, event->y), current_color});
+            queue_draw(); // Request a redraw of the widget
+        }
+        return true;
+    }
+};
+
+
 int main(int argc, char* argv[]) {
     auto app = Gtk::Application::create(argc, argv, "com.rijalasepnugroho");
 
@@ -106,6 +166,7 @@ int main(int argc, char* argv[]) {
 
     return app->run(window);
 }
+
 ```
 
 "Dan inilah hasilnya. Kita bisa menggambar di area, memilih warna yang berbeda, dan membersihkan gambar dengan menekan tombol clear."
